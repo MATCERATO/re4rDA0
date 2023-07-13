@@ -7,17 +7,19 @@ local function get_da()
     return tostring(z:call("get_GameRank"))
 end
 
+da0Values={1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
 local function get_Points()
     local z = sdk.get_managed_singleton("chainsaw.GameRankSystem")
     local ap = FloatColumn(z:get_field("_ActionPoint"))
     local ip = FloatColumn(z:get_field("_ItemPoint"))
     -- get total points and remove decimals
-    local total = math.floor(ap:get_value() + ip:get_value())
-    da0Values={1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
-    -- get the index of the closest value in the table
+    local total = math.floor(ap + ip)
+    
+    -- get the index of the closest value in the table which is lower than total
     local index = 1
     for i=1,#da0Values do
-        if math.abs(total - da0Values[i]) < math.abs(total - da0Values[index]) then
+        if math.abs(total - da0Values[i]) < math.abs(total - da0Values[index]) 
+        and total > da0Values[i] then
             index = i
         end
     end
@@ -26,8 +28,8 @@ local function get_Points()
     local difference = total - closest
     -- create table of all relevant values to return
     local returnValues = {}
-    returnValues["ap"] = ap:get_value()
-    returnValues["ip"] = ip:get_value()
+    returnValues["ap"] = ap
+    returnValues["ip"] = ip
     returnValues["total"] = total
     returnValues["closest"] = closest
     returnValues["difference"] = difference
@@ -99,9 +101,11 @@ end, function()
     d2d.text(ff, da, x0 + 0.5 * fw, y0 + fh, 0xffeceff4)
 
     local pointsTable = get_Points()
+    count=0
     for i, v in pairs(pointsTable) do
         print(i .. ' ' .. v)
-        d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh, 0xffeceff4)
+        d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + (1+count) * fh, 0xffeceff4)
+        count=count+1
     end
 
     local kc = get_killcount()
@@ -125,3 +129,4 @@ end, function()
         end
     end
 end)
+
