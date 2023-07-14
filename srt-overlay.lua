@@ -81,7 +81,7 @@ local function get_enemies()
 end
 
 d2d.register(function()
-    ff = d2d.Font.new("Verdana", 24)
+    ff = d2d.Font.new("Verdana", 24 * scale)
     _, fh = ff:measure("0123456789")
     fw = 0
     for i = 0, 9 do
@@ -90,10 +90,10 @@ d2d.register(function()
     end
 end, function()
     local sw, sh = d2d.surface_size()
-    local x0 = 15
-    local y1 = sh - 15
-    local x1 = x0 + 20 * fw
-    local y0 = y1 - 14 * fh
+    local x0 = 15 * scale
+    local y1 = sh - 15 * scale
+    local x1 = x0 + 20 * scale * fw
+    local y0 = y1 - 14 * scale * fh
     d2d.fill_rect(x0, y0, x1 - x0 + 0.25 * fw, y1 - y0, 0x802e3440)
 
     local w, _ = ff:measure(m)
