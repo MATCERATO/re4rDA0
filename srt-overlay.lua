@@ -1,4 +1,7 @@
 -- re4r srt overlay
+-- original by resist56k
+-- modified by JoydurnYup
+
 
 local ff, fw, fh
 
@@ -10,9 +13,9 @@ end
 da0Values={1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
 local function get_Points()
     local z = sdk.get_managed_singleton("chainsaw.GameRankSystem")
-    local ap = FloatColumn(z:get_field("_ActionPoint"))
-    local ip = FloatColumn(z:get_field("_ItemPoint"))
-    -- get total points and remove decimals
+    local ap = z:call("get_ActionPoint")
+    local ip = z:call("get_ItemPoint")
+    -- -- get total points and remove decimals
     local total = math.floor(ap + ip)
     
     -- get the index of the closest value in the table which is lower than total
@@ -26,6 +29,7 @@ local function get_Points()
     closest = da0Values[index]
     -- get the difference between the closest value and the total
     local difference = total - closest
+
     -- create table of all relevant values to return
     local returnValues = {}
     returnValues["ap"] = ap
@@ -88,8 +92,8 @@ end, function()
     local sw, sh = d2d.surface_size()
     local x0 = 15
     local y1 = sh - 15
-    local x1 = x0 + 14 * fw
-    local y0 = y1 - 7 * fh
+    local x1 = x0 + 20 * fw
+    local y0 = y1 - 14 * fh
     d2d.fill_rect(x0, y0, x1 - x0 + 0.25 * fw, y1 - y0, 0x802e3440)
 
     local m = get_money()
@@ -101,12 +105,32 @@ end, function()
     d2d.text(ff, da, x0 + 0.5 * fw, y0 + fh, 0xffeceff4)
 
     local pointsTable = get_Points()
-    count=0
-    for i, v in pairs(pointsTable) do
-        print(i .. ' ' .. v)
-        d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + (1+count) * fh, 0xffeceff4)
-        count=count+1
-    end
+    i='ap'
+    v = pointsTable[i]
+    v = tonumber(string.format("%.1f", v))
+    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 2, 0xffeceff4)
+
+    i='ip'
+    v = pointsTable[i]
+    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 3 , 0xffeceff4)
+
+    i='total'
+    v = pointsTable[i]
+    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 4 , 0xffeceff4)
+
+    i='closest'
+    v = pointsTable[i]
+    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 5 , 0xffeceff4)
+
+    i='difference'
+    v = pointsTable[i]
+    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 6 , 0xffeceff4)
+    -- for i, v in pairs(pointsTable) do
+    --     print(i .. ' ' .. v)
+    --     d2d.text(ff, i, x0 + 0.5 * fw, y0 + (1+count) * fh, 0xffeceff4)
+    --     d2d.text(ff, v, x0 + 0.5 * fw, y0 + (1+count) * fh, 0xffeceff4)
+    --     count=count+1
+    -- end
 
     local kc = get_killcount()
     w, _ = ff:measure(kc)
@@ -119,9 +143,9 @@ end, function()
         if i <= 5 then
             local s = tostring(x[4])
             w, _ = ff:measure(s)
-            d2d.text(ff, s, x1 - w, y0 + (1 + i) * fh, 0xffeceff4)
+            d2d.text(ff, s, x1 - w, y0 + (6 + i) * fh, 0xffeceff4)
             local a0 = x0 + 0.5 * fw
-            local b0 = y0 + (1.3 + i) * fh
+            local b0 = y0 + (6.3 + i) * fh
             local a1 = x1 - x0 - 6 * fw
             local b1 = 0.4 * fh
             d2d.fill_rect(a0, b0, a1 * x[5], b1, 0xffa3be8c)
@@ -129,4 +153,3 @@ end, function()
         end
     end
 end)
-
