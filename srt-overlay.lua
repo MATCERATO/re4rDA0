@@ -2,12 +2,21 @@
 -- original by resist56k
 -- modified by JoydurnYup
 --TO INSTALL: Install REFramework for RE4R, then put srt-overlay.lua in reframework/autorun folder
+--ADJUST SCALE FOR GUI (experimental might cause unexpected visual bugs)
+local scale=1
+
 
 local ff, fw, fh
+
 
 local function get_da()
     local z = sdk.get_managed_singleton("chainsaw.GameRankSystem")
     return tostring(z:call("get_GameRank"))
+end
+
+local function get_spinel()
+    local z = sdk.get_managed_singleton("chainsaw.InGameShopManager")
+    return tostring(z:call("get_CurrSpinelCount"))
 end
 
 da0Values={1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
@@ -80,8 +89,17 @@ local function get_enemies()
     return r
 end
 
+
+function sigFig(num,figures)
+    local x=figures - math.ceil(math.log10(math.abs(num)))
+    return(math.floor(num*10^x+0.5)/10^x)
+end
+
+
 d2d.register(function()
-    ff = d2d.Font.new("Verdana", 24 * scale)
+    
+
+    ff = d2d.Font.new("Verdana", 20 * scale)
     _, fh = ff:measure("0123456789")
     fw = 0
     for i = 0, 9 do
@@ -90,58 +108,61 @@ d2d.register(function()
     end
 end, function()
     local sw, sh = d2d.surface_size()
-    local x0 = 15 * scale
-    local y1 = sh - 15 * scale
+    local x0 = 10 * scale
+    local y1 = sh - 10 * scale
     local x1 = x0 + 20 * scale * fw
-    local y0 = y1 - 14 * scale * fh
+    local y0 = y1 - 10 * scale * fh
     d2d.fill_rect(x0, y0, x1 - x0 + 0.25 * fw, y1 - y0, 0x802e3440)
 
     local w, _ = ff:measure(m)
     d2d.text(ff, "ptas " .. get_money(), x0 + 0.5 * fw, y0, 0xffeceff4)
+    
+    local sp = "spin " .. get_spinel()
+    w, _ = ff:measure(sp)
+    d2d.text(ff, sp, x1 - w - 2.5 * fw, y0, 0xffeceff4)
 
-    local kc = get_killcount()
-    w, _ = ff:measure(kc)
-    d2d.text(ff, kc, x1 - w, y0, 0xffeceff4)
-    kc = "kc"
-    w, _ = ff:measure(kc)
-    d2d.text(ff, kc, x1 - w - 3.5 * fw, y0, 0xffeceff4)
+    
+
 
 
     --1st column 3 rows
-    local da = "da " .. get_da()
-    d2d.text(ff, da, x0 + 0.5 * fw, y0 + fh, 0xffeceff4)
+    local da = "rank " .. get_da()
+    d2d.text(ff, da, x0 + 0.5 * fw, y0 + fh * 1, 0xffeceff4)
 
     local pointsTable = get_Points()
     i='ap'
-    v = pointsTable[i]
+    v = tonumber(pointsTable[i])
     v = tonumber(("%.5g"):format(v))
-    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 2, 0xffeceff4)
+    d2d.text(ff, i .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
 
     i='ip'
     v = pointsTable[i]
-    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 3 , 0xffeceff4)
+    d2d.text(ff, i .. '     ' .. v, x0 + 0.5 * fw, y0 + fh * 4 , 0xffeceff4)
 
     --2nd column 3 rows
+    
+    w, _ = ff:measure(kc)
+
+    kc = "kills"
+    w, _ = ff:measure(kc)
+    d2d.text(ff, kc, x1 - w - 4.5 * fw, y0 + fh * 1, 0xffeceff4)
+    local kc = get_killcount()
+    d2d.text(ff, kc, x1 - w - 0.5* fw , y0+ fh, 0xffeceff4)
+
     i='total'
-    v = pointsTable[i]
-    w, _ = ff:measure(v)
-    d2d.text(ff, v, x1 - w, y0 + fh , 0xffeceff4)
-    w, _ = ff:measure(i)
-    d2d.text(ff, i, x1 - w - 3.5 * fw, y0 + fh , 0xffeceff4)
-
-    i='closest'
-    v = pointsTable[i]
-    w, _ = ff:measure(v)
-    d2d.text(ff, v, x1 - w, y0 + fh * 2, 0xffeceff4)
-    w, _ = ff:measure(i)
-    d2d.text(ff, i, x1 - w - 3.5 * fw, y0 + fh * 2 , 0xffeceff4)
-
-    i='difference'
     v = pointsTable[i]
     w, _ = ff:measure(v)
     d2d.text(ff, v, x1 - w, y0 + fh * 3, 0xffeceff4)
     w, _ = ff:measure(i)
-    d2d.text(ff, i, x1 - w - 3.5 * fw, y0 + fh * 3, 0xffeceff4)
+    d2d.text(ff, i, x1 - w - 4.5 * fw, y0 + fh * 3 , 0xffeceff4)
+
+    i='difference'
+    v = pointsTable[i]
+    w, _ = ff:measure(v)
+    d2d.text(ff, v, x1 - w, y0 + fh * 4, 0xffeceff4)
+    i='dif'
+    w, _ = ff:measure(i)
+    d2d.text(ff, i, x1 - w - 4.5 * fw, y0 + fh * 4, 0xffeceff4)
 
    
 
@@ -149,9 +170,9 @@ end, function()
         if i <= 5 then
             local s = tostring(x[4])
             w, _ = ff:measure(s)
-            d2d.text(ff, s, x1 - w, y0 + (6 + i) * fh, 0xffeceff4)
+            d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
             local a0 = x0 + 0.5 * fw
-            local b0 = y0 + (6.3 + i) * fh
+            local b0 = y0 + (4.3 + i) * fh
             local a1 = x1 - x0 - 6 * fw
             local b1 = 0.4 * fh
             d2d.fill_rect(a0, b0, a1 * x[5], b1, 0xffa3be8c)
