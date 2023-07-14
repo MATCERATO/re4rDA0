@@ -1,7 +1,7 @@
 -- re4r srt overlay
 -- original by resist56k
 -- modified by JoydurnYup
-
+--TO INSTALL: Install REFramework for RE4R, then put srt-overlay.lua in reframework/autorun folder
 
 local ff, fw, fh
 
