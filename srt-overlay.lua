@@ -96,48 +96,54 @@ end, function()
     local y0 = y1 - 14 * fh
     d2d.fill_rect(x0, y0, x1 - x0 + 0.25 * fw, y1 - y0, 0x802e3440)
 
-    local m = get_money()
     local w, _ = ff:measure(m)
-    d2d.text(ff, "ptas", x0 + 0.5 * fw, y0, 0xffeceff4)
-    d2d.text(ff, m, x1 - w, y0, 0xffeceff4)
+    d2d.text(ff, "ptas " .. get_money(), x0 + 0.5 * fw, y0, 0xffeceff4)
 
+    local kc = get_killcount()
+    w, _ = ff:measure(kc)
+    d2d.text(ff, kc, x1 - w, y0, 0xffeceff4)
+    kc = "kc"
+    w, _ = ff:measure(kc)
+    d2d.text(ff, kc, x1 - w - 3.5 * fw, y0, 0xffeceff4)
+
+
+    --1st column 3 rows
     local da = "da " .. get_da()
     d2d.text(ff, da, x0 + 0.5 * fw, y0 + fh, 0xffeceff4)
 
     local pointsTable = get_Points()
     i='ap'
     v = pointsTable[i]
-    v = tonumber(string.format("%.1f", v))
+    v = tonumber(("%.5g"):format(v))
     d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 2, 0xffeceff4)
 
     i='ip'
     v = pointsTable[i]
     d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 3 , 0xffeceff4)
 
+    --2nd column 3 rows
     i='total'
     v = pointsTable[i]
-    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 4 , 0xffeceff4)
+    w, _ = ff:measure(v)
+    d2d.text(ff, v, x1 - w, y0 + fh , 0xffeceff4)
+    w, _ = ff:measure(i)
+    d2d.text(ff, i, x1 - w - 3.5 * fw, y0 + fh , 0xffeceff4)
 
     i='closest'
     v = pointsTable[i]
-    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 5 , 0xffeceff4)
+    w, _ = ff:measure(v)
+    d2d.text(ff, v, x1 - w, y0 + fh * 2, 0xffeceff4)
+    w, _ = ff:measure(i)
+    d2d.text(ff, i, x1 - w - 3.5 * fw, y0 + fh * 2 , 0xffeceff4)
 
     i='difference'
     v = pointsTable[i]
-    d2d.text(ff, i .. ' ' .. v, x0 + 0.5 * fw, y0 + fh * 6 , 0xffeceff4)
-    -- for i, v in pairs(pointsTable) do
-    --     print(i .. ' ' .. v)
-    --     d2d.text(ff, i, x0 + 0.5 * fw, y0 + (1+count) * fh, 0xffeceff4)
-    --     d2d.text(ff, v, x0 + 0.5 * fw, y0 + (1+count) * fh, 0xffeceff4)
-    --     count=count+1
-    -- end
+    w, _ = ff:measure(v)
+    d2d.text(ff, v, x1 - w, y0 + fh * 3, 0xffeceff4)
+    w, _ = ff:measure(i)
+    d2d.text(ff, i, x1 - w - 3.5 * fw, y0 + fh * 3, 0xffeceff4)
 
-    local kc = get_killcount()
-    w, _ = ff:measure(kc)
-    d2d.text(ff, kc, x1 - w, y0 + fh, 0xffeceff4)
-    kc = "kc"
-    w, _ = ff:measure(kc)
-    d2d.text(ff, kc, x1 - w - 3.5 * fw, y0 + fh, 0xffeceff4)
+   
 
     for i, x in ipairs(get_enemies()) do
         if i <= 5 then
