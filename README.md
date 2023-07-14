@@ -8,4 +8,4 @@ TO INSTALL: Install [REFramework at Resident Evil 4 (2023) - Nexus mods and comm
 
 Right now no customisation options and its kinda messy
 
-![1689294082493](image/README/1689294082493.png)
+![1689294082493](image/README/preview.png)
