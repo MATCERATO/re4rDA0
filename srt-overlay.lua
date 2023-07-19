@@ -90,9 +90,31 @@ local function get_enemies()
 end
 
 
-function sigFig(num,figures)
-    local x=figures - math.ceil(math.log10(math.abs(num)))
-    return(math.floor(num*10^x+0.5)/10^x)
+function transformNumber(v)
+    v=tostring(v)
+    floor=math.floor(v)
+    difference=v-floor
+    if difference==0 then
+        return v
+    else
+        fullLength=string.len(v)
+        floorLength=string.len(floor)
+        
+        decimal=string.sub(v,floorLength+1,fullLength)
+        
+        newDecimal=''
+        i=1
+        while true do
+            local c = tostring(decimal:sub(i,i))
+            newDecimal=newDecimal .. c
+            if c~='0' and c~='.' then break
+            end
+            i=i+1
+        end
+        
+        newNumber=floor..newDecimal
+        return tostring(newNumber)
+    end
 end
 
 
@@ -132,7 +154,7 @@ end, function()
     local pointsTable = get_Points()
     i='ap'
     v = tonumber(pointsTable[i])
-    v = tonumber(("%.5g"):format(v))
+    v = transformNumber(v)
     d2d.text(ff, i .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
 
     i='ip'
@@ -171,6 +193,7 @@ end, function()
             local s = tostring(x[4])
             w, _ = ff:measure(s)
             d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
+            d2d.text(ff, x[5], x1 - w - 50, y0 + (4 + i) * fh, 0xffeceff4)
             local a0 = x0 + 0.5 * fw
             local b0 = y0 + (4.3 + i) * fh
             local a1 = x1 - x0 - 6 * fw
