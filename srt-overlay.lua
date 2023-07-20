@@ -19,7 +19,7 @@ local function get_spinel()
     return tostring(z:call("get_CurrSpinelCount"))
 end
 
-da0Values={1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
+da0Values={-5000,-4000,-3000,-2000,-1000,999,1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
 local function get_Points()
     local z = sdk.get_managed_singleton("chainsaw.GameRankSystem")
     local ap = z:call("get_ActionPoint")
@@ -153,7 +153,7 @@ end, function()
 
     local pointsTable = get_Points()
     i='ap'
-    v = tonumber(pointsTable[i])
+    v = pointsTable[i]
     v = transformNumber(v)
     d2d.text(ff, i .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
 
