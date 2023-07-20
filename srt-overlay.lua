@@ -2,8 +2,15 @@
 -- original by resist56k
 -- modified by JoydurnYup
 --TO INSTALL: Install REFramework for RE4R, then put srt-overlay.lua in reframework/autorun folder
+
 --ADJUST SCALE FOR GUI (experimental might cause unexpected visual bugs)
 local scale=1
+
+--ADJUST PERCENT true or false TO SHOW HP IN PERCENTAGE OR RAW VALUE
+local percent=false
+
+
+
 
 
 local ff, fw, fh
@@ -160,7 +167,7 @@ end, function()
     i='ap'
     v = pointsTable[i]
     v = transformNumber(v)
-    d2d.text(ff, i .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
+    d2d.text(ff, 'ap' .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
 
     i='ip'
     v = pointsTable[i]
@@ -197,14 +204,19 @@ end, function()
         if i <= 5 then
             local s = tostring(x[4])
             w, _ = ff:measure(s)
-            d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
-            d2d.text(ff, x[5], x1 - w - 50, y0 + (4 + i) * fh, 0xffeceff4)
+            if percent then
+                percent=tonumber(string.format("%.1f", tostring(x[5]*100))) .. '%'
+                d2d.text(ff, percent, x1 - w-25, y0 + (4 + i) * fh, 0xffeceff4)
+            else
+                d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
+            end
             local a0 = x0 + 0.5 * fw
             local b0 = y0 + (4.3 + i) * fh
             local a1 = x1 - x0 - 6 * fw
             local b1 = 0.4 * fh
-            d2d.fill_rect(a0, b0, a1 * x[5], b1, 0xffa3be8c)
-            d2d.outline_rect(a0, b0, a1, b1, 1, 0xff4c566a)
+            offset=25
+            d2d.fill_rect(a0, b0, a1 * x[5] - offset, b1, 0xffa3be8c)
+            d2d.outline_rect(a0, b0, a1 - offset, b1, 1, 0xff4c566a)
         end
     end
 end)
