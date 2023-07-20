@@ -2,8 +2,15 @@
 -- original by resist56k
 -- modified by JoydurnYup
 --TO INSTALL: Install REFramework for RE4R, then put srt-overlay.lua in reframework/autorun folder
+
 --ADJUST SCALE FOR GUI (experimental might cause unexpected visual bugs)
 local scale=1
+
+--ADJUST PERCENT true or false TO SHOW HP IN PERCENTAGE OR RAW VALUE
+local percent=false
+
+
+
 
 
 local ff, fw, fh
@@ -19,7 +26,7 @@ local function get_spinel()
     return tostring(z:call("get_CurrSpinelCount"))
 end
 
-da0Values={1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
+da0Values={-5000,-4000,-3000,-2000,-1000,999,1999,2999,3999,4999,5999,6999,7999,8999,9999,10999}
 local function get_Points()
     local z = sdk.get_managed_singleton("chainsaw.GameRankSystem")
     local ap = z:call("get_ActionPoint")
@@ -90,9 +97,36 @@ local function get_enemies()
 end
 
 
-function sigFig(num,figures)
-    local x=figures - math.ceil(math.log10(math.abs(num)))
-    return(math.floor(num*10^x+0.5)/10^x)
+function transformNumber(v)
+    if v<0 then
+        v=tostring(v)
+        floor=math.ceil(v)
+    else
+        v=tostring(v)
+        floor=math.floor(v)
+    end
+    difference=v-floor
+    if difference==0 then
+        return v
+    else
+        fullLength=string.len(v)
+        floorLength=string.len(floor)
+        
+        decimal=string.sub(v,floorLength+1,fullLength)
+        
+        newDecimal=''
+        i=1
+        while true do
+            local c = tostring(decimal:sub(i,i))
+            newDecimal=newDecimal .. c
+            if c~='0' and c~='.' then break
+            end
+            i=i+1
+        end
+        
+        newNumber=floor..newDecimal
+        return tostring(newNumber)
+    end
 end
 
 
@@ -131,9 +165,9 @@ end, function()
 
     local pointsTable = get_Points()
     i='ap'
-    v = tonumber(pointsTable[i])
-    v = tonumber(("%.5g"):format(v))
-    d2d.text(ff, i .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
+    v = pointsTable[i]
+    v = transformNumber(v)
+    d2d.text(ff, 'ap' .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
 
     i='ip'
     v = pointsTable[i]
@@ -170,13 +204,19 @@ end, function()
         if i <= 5 then
             local s = tostring(x[4])
             w, _ = ff:measure(s)
-            d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
+            if percent then
+                percent=tonumber(string.format("%.1f", tostring(x[5]*100))) .. '%'
+                d2d.text(ff, percent, x1 - w-25, y0 + (4 + i) * fh, 0xffeceff4)
+            else
+                d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
+            end
             local a0 = x0 + 0.5 * fw
             local b0 = y0 + (4.3 + i) * fh
             local a1 = x1 - x0 - 6 * fw
             local b1 = 0.4 * fh
-            d2d.fill_rect(a0, b0, a1 * x[5], b1, 0xffa3be8c)
-            d2d.outline_rect(a0, b0, a1, b1, 1, 0xff4c566a)
+            offset=25
+            d2d.fill_rect(a0, b0, a1 * x[5] - offset, b1, 0xffa3be8c)
+            d2d.outline_rect(a0, b0, a1 - offset, b1, 1, 0xff4c566a)
         end
     end
 end)
