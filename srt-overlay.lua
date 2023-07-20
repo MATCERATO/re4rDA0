@@ -91,8 +91,13 @@ end
 
 
 function transformNumber(v)
-    v=tostring(v)
-    floor=math.floor(v)
+    if v<0 then
+        v=tostring(v)
+        floor=math.ceil(v)
+    else
+        v=tostring(v)
+        floor=math.floor(v)
+    end
     difference=v-floor
     if difference==0 then
         return v
