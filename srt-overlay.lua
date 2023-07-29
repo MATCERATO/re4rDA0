@@ -130,10 +130,10 @@ function transformNumber(v)
 end
 
 
-d2d.register(function()
+.register(function()
     
 
-    ff = d2d.Font.new("Verdana", 20 * scale)
+    ff = .Font.new("Verdana", 20 * scale)
     _, fh = ff:measure("0123456789")
     fw = 0
     for i = 0, 9 do
@@ -141,19 +141,19 @@ d2d.register(function()
         fw = math.max(fw, x)
     end
 end, function()
-    local sw, sh = d2d.surface_size()
+    local sw, sh = .surface_size()
     local x0 = 10 * scale
     local y1 = sh - 10 * scale
     local x1 = x0 + 20 * scale * fw
     local y0 = y1 - 10 * scale * fh
-    d2d.fill_rect(x0, y0, x1 - x0 + 0.25 * fw, y1 - y0, 0x802e3440)
+    fill_rect(x0, y0, x1 - x0 + 0.25 * fw, y1 - y0, 0x802e3440)
 
     local w, _ = ff:measure(m)
-    d2d.text(ff, "ptas " .. get_money(), x0 + 0.5 * fw, y0, 0xffeceff4)
+    .text(ff, "ptas " .. get_money(), x0 + 0.5 * fw, y0, 0xffeceff4)
     
     local sp = "spin " .. get_spinel()
     w, _ = ff:measure(sp)
-    d2d.text(ff, sp, x1 - w - 2.5 * fw, y0, 0xffeceff4)
+    .text(ff, sp, x1 - w - 2.5 * fw, y0, 0xffeceff4)
 
     
 
@@ -161,17 +161,17 @@ end, function()
 
     --1st column 3 rows
     local da = "rank " .. get_da()
-    d2d.text(ff, da, x0 + 0.5 * fw, y0 + fh * 1, 0xffeceff4)
+    .text(ff, da, x0 + 0.5 * fw, y0 + fh * 1, 0xffeceff4)
 
     local pointsTable = get_Points()
     i='ap'
     v = pointsTable[i]
     v = transformNumber(v)
-    d2d.text(ff, 'ap' .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
+    .text(ff, 'ap' .. '    ' .. v, x0 + 0.5 * fw, y0 + fh * 3, 0xffeceff4)
 
     i='ip'
     v = pointsTable[i]
-    d2d.text(ff, i .. '     ' .. v, x0 + 0.5 * fw, y0 + fh * 4 , 0xffeceff4)
+    .text(ff, i .. '     ' .. v, x0 + 0.5 * fw, y0 + fh * 4 , 0xffeceff4)
 
     --2nd column 3 rows
     
@@ -179,24 +179,24 @@ end, function()
 
     kc = "kills"
     w, _ = ff:measure(kc)
-    d2d.text(ff, kc, x1 - w - 4.5 * fw, y0 + fh * 1, 0xffeceff4)
+    .text(ff, kc, x1 - w - 4.5 * fw, y0 + fh * 1, 0xffeceff4)
     local kc = get_killcount()
-    d2d.text(ff, kc, x1 - w - 0.5* fw , y0+ fh, 0xffeceff4)
+    .text(ff, kc, x1 - w - 0.5* fw , y0+ fh, 0xffeceff4)
 
     i='total'
     v = pointsTable[i]
     w, _ = ff:measure(v)
-    d2d.text(ff, v, x1 - w, y0 + fh * 3, 0xffeceff4)
+    .text(ff, v, x1 - w, y0 + fh * 3, 0xffeceff4)
     w, _ = ff:measure(i)
-    d2d.text(ff, i, x1 - w - 4.5 * fw, y0 + fh * 3 , 0xffeceff4)
+    .text(ff, i, x1 - w - 4.5 * fw, y0 + fh * 3 , 0xffeceff4)
 
     i='difference'
     v = pointsTable[i]
     w, _ = ff:measure(v)
-    d2d.text(ff, v, x1 - w, y0 + fh * 4, 0xffeceff4)
+    .text(ff, v, x1 - w, y0 + fh * 4, 0xffeceff4)
     i='dif'
     w, _ = ff:measure(i)
-    d2d.text(ff, i, x1 - w - 4.5 * fw, y0 + fh * 4, 0xffeceff4)
+    .text(ff, i, x1 - w - 4.5 * fw, y0 + fh * 4, 0xffeceff4)
 
    
 
@@ -206,9 +206,9 @@ end, function()
             w, _ = ff:measure(s)
             if percent then
                 percent=tonumber(string.format("%.1f", tostring(x[5]*100))) .. '%'
-                d2d.text(ff, percent, x1 - w-25, y0 + (4 + i) * fh, 0xffeceff4)
+                .text(ff, percent, x1 - w-25, y0 + (4 + i) * fh, 0xffeceff4)
             else
-                d2d.text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
+                .text(ff, s, x1 - w, y0 + (4 + i) * fh, 0xffeceff4)
             end
             local a0 = x0 + 0.5 * fw
             local b0 = y0 + (4.3 + i) * fh
